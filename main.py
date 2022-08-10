@@ -1,7 +1,9 @@
 import os
 import re
 import shutil
-
+"""
+скрипт раскопировнаия файла manager.pac по подпапкам магазинов
+"""
 
 def slice_elem(elem):
     """
@@ -41,14 +43,18 @@ def copy_file_to_folders(i_file: str, i_path: str, subfolder_list: list) -> None
         full_path = i_path + '\\' + fold + '\\'
         if os.path.exists(full_path):
             shutil.copy(i_file, full_path+i_file)
+            print(full_path)
 
 def main():
-    # read_path = 'u:\\prg\\__\\_МагазиныWin10.prg'
+    read_path = 'u:\\prg\\__\\_МагазиныWin10.prg'
     write_path = 'u:\\rpt\\'
+    # write_path = 'W:\\'
     file_to_copy = 'manager.pac'
+    # file_to_copy = '6_01_sale.json'
     read_path = '_МагазиныWin10.prg'
     list_folders = read_file(read_path)
-    print(list_folders)
+    copy_file_to_folders(file_to_copy, write_path, list_folders)
+    # print(list_folders)
 
 if __name__ == '__main__':
     main()
