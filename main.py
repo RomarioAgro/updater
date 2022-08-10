@@ -1,16 +1,20 @@
-# This is a sample Python script.
-
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+import os
+import re
 
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+def read_file(i_path):
+    pattern = r''
+    list_folders = []
+    with open(i_path, 'r', encoding='cp866') as i_file:
+        for line in i_file:
+            print(line, end='')
+    return list_folders
 
+def main():
+    # read_path = 'u:\\prg\\__\\_МагазиныWin10.prg'
+    read_path = 'МагазиныWin10.prg'
+    list_folders = read_file(read_path)
+    pass
 
-# Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    main()
