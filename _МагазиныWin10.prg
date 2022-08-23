@@ -1,7 +1,7 @@
 Функция _МагазиныWin10()
 {
 #список магазинов в которых стоит Win10
-пСтрокаwin10=";CL;EV;PM;PZ;PY;EF;LT;OO;OD;UP;BC;BK;TT;UZ;OK;"
+пСтрокаwin10=";CL;EV;PM;PZ;PY;EF;LT;OO;OD;UP;BC;BK;TT;UZ;OK;OT;PR;4M;"
 Если(Найти(пСтрокаwin10,КаСНОМ)!=0) Вернуть(1)
 Иначе Вернуть(0)
 
