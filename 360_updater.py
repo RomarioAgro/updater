@@ -91,10 +91,11 @@ def main():
     write_file = 'rsync.cmd'
     read_path = '_МагазиныWin10.prg'
 
-    # str_for_run = 'pip install e:\\dropbox\\distr\\python\\pkg\\pywin32-224-cp34-cp34m-win32.whl'
+
     list_folders_Win10 = read_file(read_path)
     list_folders_WinXP = list_WinXP(list_folders_Win10, write_path)
     # list_folders_WinXP = ['AT']
+    # str_for_run = 'pip install e:\\dropbox\\distr\\python\\pkg\\pywin32-224-cp34-cp34m-win32.whl'
     # editing_rsync(work_path=write_path, list_WinXP=list_folders_WinXP, add_string=str_for_run)
     str_for_run = 'python d:\\kassa\\script_py\\360Chrom.py'
     # editing_rsync(work_path=write_path, list_WinXP=list_folders_WinXP, add_string=str_for_run)
