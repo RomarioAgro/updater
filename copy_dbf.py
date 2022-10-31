@@ -2,7 +2,7 @@ import os
 from typing import List
 import re
 import shutil
-import time
+import hashlib
 """
 скрипт раскопирования файлов dbf
 из папки 
@@ -12,6 +12,17 @@ import time
 \\store\junk\90_Файлсервер\backup\dbf\EA\DBF\*.dbf
 EA это переменная магазина как вы поняли
 """
+
+def get_hash_md5(filename):
+    with open(filename, 'rb') as f:
+        m = hashlib.md5()
+        while True:
+            data = f.read(8192)
+            if not data:
+                break
+            m.update(data)
+        return m.hexdigest()
+
 
 def read_file_in_folder(top_folder: str = '', folder_shops: List = [], folder_destination: str = '') -> None:
     """
@@ -37,20 +48,18 @@ def read_file_in_folder(top_folder: str = '', folder_shops: List = [], folder_de
                 dest_file = folder_destination + '\\' + shop + '\\' + sub_dir_dest + '\\' + files  #полное имя конечного файла
                 copy_yes = False  #флаг делать копирование
                 if os.path.exists(dest_file):  #если конечный айл существует то надо его время посмотреть
-                    t_source = os.path.getctime(source_file)
-                    t_dest = os.path.getctime(dest_file)
-                    if int(t_source) != int(t_dest):
+                    hash_source = get_hash_md5(source_file)
+                    dest_source = get_hash_md5(dest_file)
+                    # print(hash_source)
+                    # print(dest_source)
+                    if hash_source != dest_source:
                         copy_yes = True
-                        t_cs = time.ctime(t_source)
-                        t_cd = time.ctime(t_dest)
-                        print('дата {0} файл1 {2} в дата {1} файл2 {3} '.format(t_cs,
-                                                                                t_cd,
-                                                                                source_file,
-                                                                                dest_file))
+                        print('ФАЙЛЫ ОТЛИЧАЮТСЯ! скопирован файл1 {0} в файл2 {1}'.format(source_file, dest_file))
                 else:
                     copy_yes = True
-                    print('скопирован файл {0} в файл {1}'.format(source_file, dest_file))
+                    print('ФАЙЛА НЕТ! скопирован файл {0} в файл {1}'.format(source_file, dest_file))
                 if copy_yes == True:
+                    pass
                     shutil.copy2(source_file, dest_file)
 
 
@@ -75,6 +84,7 @@ def main():
     """
     r_path = r'\\shoprsync\\rsync\\inbox\\'
     folder_shops = read_path(in_path=r_path)   #получаем список папок магазнов
+    folder_shops = ['TT']
     write_path = [r'\\shoprsync\\magazin\\', r'\\store\\junk\\90_Файлсервер\\backup\\dbf\\']  #пути куда нам надо закинуть наши dbf
     # write_path = [r'\\shoprsync\\magazin\\']  # пути куда нам надо закинуть наши dbf
     for elem in write_path:
