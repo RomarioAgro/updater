@@ -39,19 +39,26 @@ def copy_file_to_folders(i_file: str, i_path: str, subfolder_list: list) -> None
     :param subfolder_list: list списокпапок по которым будем копировать
     :return: None
     """
+    i = 1
     for fold in subfolder_list:
         full_path = i_path + '\\' + fold + '\\'
         if os.path.exists(full_path):
             shutil.copy(i_file, full_path+i_file)
-            print(full_path)
+            print(f'{i} {full_path}')
+            i += 1
 
 def main():
+    """
+    скрипт копирования file_to_copy по субпапкам папкам write_path
+    список субпапок берется из read_path
+    :return:
+    """
     read_path = 'u:\\prg\\__\\_МагазиныWin10.prg'
     write_path = 'u:\\rpt\\'
     # write_path = 'W:\\'
     file_to_copy = 'manager.pac'
     # file_to_copy = '6_01_sale.json'
-    read_path = '_МагазиныWin10.prg'
+    # read_path = '_МагазиныWin10.prg'
     list_folders = read_file(read_path)
     copy_file_to_folders(file_to_copy, write_path, list_folders)
     # print(list_folders)

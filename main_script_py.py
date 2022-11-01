@@ -64,18 +64,19 @@ def make_subfolder(root_folder:str = 'R:\\', top_folders:list = [], sub_folder:s
                 print(full_path)
 
 def main():
-    read_path = 'u:\\prg\\__\\_МагазиныWin10.prg'
+    # read_path = 'u:\\prg\\__\\_МагазиныWin10.prg'
     write_path = 'u:\\script_py\\'
     # write_path = 'W:\\'
-    file_to_copy = 'd:\\kassa\\script_py\\check.py'
-    sub_dir = 'shtrih'
+    # file_to_copy = 'd:\\kassa\\script_py\\hoznuzhdi\\hoznuzhdi.py'
+    file_to_copy = 'd:\\kassa\\script_py\\flashcall\\flashcall_cleverv.py'
+    sub_dir = 'flashcall'
     print(os.listdir(write_path))
     # read_path = '_МагазиныWin10.prg'
     # list_folders = read_file(read_path)
     list_folders = os.listdir(write_path)
-    # make_subfolder(root_folder=write_path, top_folders=list_folders, sub_folder=sub_dir)
+    make_subfolder(root_folder=write_path, top_folders=list_folders, sub_folder=sub_dir)
     copy_file_to_folders(file_to_copy, write_path, list_folders, sub_dir=sub_dir)
-    # print(list_folders)
+    print(list_folders)
 
 if __name__ == '__main__':
     main()

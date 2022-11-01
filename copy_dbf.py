@@ -3,7 +3,7 @@ from typing import List
 import re
 import shutil
 import hashlib
-from progress.bar import Bar, IncrementalBar
+from progress.bar import IncrementalBar, ShadyBar
 
 """
 скрипт раскопирования файлов dbf
@@ -40,9 +40,10 @@ def read_file_in_folder(top_folder: str = '', folder_shops: List = [], folder_de
     sub_dir_dest = 'dbf'  #конечная папка для аналитикии бекапов
 
     pattern = r'[A-Za-z]{2}[A-Ca-c0-9]{5}[N,Z]{1}.dbf'  #шаблон должен покрывать файлы такого вида KB10922Z.dbf
-    shop_bar = Bar('SHOPS', max=len(folder_shops))
+    shop_bar = ShadyBar('SHOPS', max=len(folder_shops))
     for shop in folder_shops:   #проходим по папкам магазинов
         shop_bar.next()
+        print()
         inbox_export = top_folder + shop + '\\' +sub_dir_inbox
         filenames = next(os.walk(inbox_export), (None, None, []))[2]   #собираем список файлов
         files_bar = IncrementalBar('FILES in {0}'.format(shop), max=len(filenames))
