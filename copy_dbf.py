@@ -65,13 +65,21 @@ def read_file_in_folder(top_folder: str = '', folder_shops: List = [], folder_de
             if re.fullmatch(pattern, files) is not None:
                 # тут надо сравнить хэши первого файла и второго
                 source_file = inbox_export + '\\' + files  #полное имя исходного файла
-                hash_source = get_hash_md5(source_file)
+                try:
+                    hash_source = get_hash_md5(source_file)
+                except Exception as exc:
+                    logger_cd.debug('ошибка получения хэша source {0}'.format(exc))
+                    hash_source = ''
                 for elem in folder_destination:
                     dest_file_name = files.upper()
                     dest_file = elem + '\\' + shop + '\\' + sub_dir_dest + '\\' + dest_file_name  #полное имя конечного файла
                     copy_yes = False  #флаг делать копирование
                     if os.path.exists(dest_file):  #если конечный файл существует то надо сравнить хэши файлов
-                        dest_source = get_hash_md5(dest_file)
+                        try:
+                            dest_source = get_hash_md5(dest_file)
+                        except Exception as exc:
+                            logger_cd.debug('ошибка получения хэша dest {0}'.format(exc))
+                            dest_source = ''
                         if hash_source != dest_source:
                             copy_yes = True
                             print('ФАЙЛЫ ОТЛИЧАЮТСЯ! скопирован файл1 {0} в файл2 {1}'.format(source_file, dest_file))
