@@ -26,7 +26,7 @@ def get_hash_md5(filename):
         return m.hexdigest()
 
 
-def read_file_in_folder(top_folder: str = '', folder_shops: List = [], folder_destination: list = []) -> None:
+def read_file_in_folder(top_folder: str = '', folder_shops: List = [], folder_destination: List = []) -> None:
     """
     проходим по папке магазина смотрим дату создания файлов dbf
     и если в конечной папке нет этого файла или у него дата другая
@@ -38,8 +38,7 @@ def read_file_in_folder(top_folder: str = '', folder_shops: List = [], folder_de
     """
     sub_dir_inbox = 'export'  #в инбоксе dbf файлы хранятся в папке export
     sub_dir_dest = 'dbf'  #конечная папка для аналитикии бекапов
-
-    pattern = r'[A-Za-z]{2}[A-Ca-c0-9]{5}[N,Z]{1}.dbf'  #шаблон должен покрывать файлы такого вида KB10922Z.dbf
+    pattern = r'[A-Za-z0-9]{2}[A-Ca-c0-9]{5}[N,Z,n,z]{1}.[Dd][Bb][Ff]'  #шаблон должен покрывать файлы такого вида KB10922Z.dbf
     shop_bar = ShadyBar('SHOPS', max=len(folder_shops))
     for shop in folder_shops:   #проходим по папкам магазинов
         shop_bar.next()
@@ -49,17 +48,17 @@ def read_file_in_folder(top_folder: str = '', folder_shops: List = [], folder_de
         files_bar = IncrementalBar('FILES in {0}'.format(shop), max=len(filenames))
         for files in filenames:
             files_bar.next()
+            a = re.fullmatch(pattern, files)
             if re.fullmatch(pattern, files) is not None:
                 # тут надо сравнить хэши первого файла и второго
                 source_file = inbox_export + '\\' + files  #полное имя исходного файла
                 hash_source = get_hash_md5(source_file)
                 for elem in folder_destination:
-                    dest_file = elem + '\\' + shop + '\\' + sub_dir_dest + '\\' + files  #полное имя конечного файла
+                    dest_file_name = files.upper()
+                    dest_file = elem + '\\' + shop + '\\' + sub_dir_dest + '\\' + dest_file_name  #полное имя конечного файла
                     copy_yes = False  #флаг делать копирование
                     if os.path.exists(dest_file):  #если конечный файл существует то надо сравнить хэши файлов
                         dest_source = get_hash_md5(dest_file)
-                        # print(hash_source)
-                        # print(dest_source)
                         if hash_source != dest_source:
                             copy_yes = True
                             print('ФАЙЛЫ ОТЛИЧАЮТСЯ! скопирован файл1 {0} в файл2 {1}'.format(source_file, dest_file))
@@ -93,10 +92,8 @@ def main():
     """
     r_path = r'\\shoprsync\\rsync\\inbox\\'
     folder_shops = read_path(in_path=r_path)   #получаем список папок магазнов
+    # folder_shops = ['LT']
     write_path = [r'\\shoprsync\\magazin\\', r'\\store\\junk\\90_Файлсервер\\backup\\dbf\\']  #пути куда нам надо закинуть наши dbf
-    write_path = [r'\\shoprsync\\magazin\\']  # пути куда нам надо закинуть наши dbf
-    # for elem in write_path:
-    #     read_file_in_folder(top_folder=r_path, folder_shops=folder_shops, folder_destination=elem)
     read_file_in_folder(top_folder=r_path, folder_shops=folder_shops, folder_destination=write_path)
 
 if __name__ == '__main__':
