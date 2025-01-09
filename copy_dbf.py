@@ -24,7 +24,7 @@ logging.basicConfig(
     format="%(asctime)s - %(filename)s - %(funcName)s: %(lineno)d - %(message)s",
     datefmt='%H:%M:%S')
 
-logger_cd = logging.Logger = logging.getLogger(__name__)
+logger_cd = logging.getLogger(__name__)
 logger_cd.setLevel(logging.DEBUG)
 logger_cd.debug('start')
 
@@ -104,7 +104,8 @@ def read_path(in_path: str = '\\shoprsync\\rsync\\inbox\\') -> List:
     """
     pattern = r'[a-zA-Z0-9]{2}'
     o_dir = list(filter(lambda x: re.fullmatch(pattern, x) is not None, os.listdir(in_path)))
-    return o_dir
+    o_dir_sorted = sorted(o_dir)
+    return o_dir_sorted
 
 def main():
     """
