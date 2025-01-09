@@ -4,6 +4,8 @@ import re
 import shutil
 import hashlib
 from progress.bar import IncrementalBar, ShadyBar
+import logging
+import datetime
 
 """
 скрипт раскопирования файлов dbf
@@ -14,6 +16,17 @@ from progress.bar import IncrementalBar, ShadyBar
 \\store\junk\90_Файлсервер\backup\dbf\EA\DBF\*.dbf
 EA это переменная магазина как вы поняли
 """
+current_time = datetime.datetime.strftime(datetime.datetime.now(), '%Y-%m-%d %H_%M_%S')
+logging.basicConfig(
+    filename='d:\\files\\' + os.path.basename(__file__) + '_' + current_time + '_.log',
+    filemode='a',
+    level=logging.DEBUG,
+    format="%(asctime)s - %(filename)s - %(funcName)s: %(lineno)d - %(message)s",
+    datefmt='%H:%M:%S')
+
+logger_cd = logging.Logger = logging.getLogger(__name__)
+logger_cd.setLevel(logging.DEBUG)
+logger_cd.debug('start')
 
 def get_hash_md5(filename):
     with open(filename, 'rb') as f:
@@ -41,6 +54,7 @@ def read_file_in_folder(top_folder: str = '', folder_shops: List = [], folder_de
     pattern = r'[A-Za-z0-9]{2}[A-Ca-c0-9]{5}[N,Z,n,z]{1}.[Dd][Bb][Ff]'  #шаблон должен покрывать файлы такого вида KB10922Z.dbf
     shop_bar = ShadyBar('SHOPS', max=len(folder_shops))
     for shop in folder_shops:   #проходим по папкам магазинов
+        logger_cd.debug('зашли в папку {0}'.format(shop))
         shop_bar.next()
         print()
         inbox_export = top_folder + shop + '\\' +sub_dir_inbox
@@ -48,7 +62,6 @@ def read_file_in_folder(top_folder: str = '', folder_shops: List = [], folder_de
         files_bar = IncrementalBar('FILES in {0}'.format(shop), max=len(filenames))
         for files in filenames:
             files_bar.next()
-            a = re.fullmatch(pattern, files)
             if re.fullmatch(pattern, files) is not None:
                 # тут надо сравнить хэши первого файла и второго
                 source_file = inbox_export + '\\' + files  #полное имя исходного файла
@@ -66,7 +79,17 @@ def read_file_in_folder(top_folder: str = '', folder_shops: List = [], folder_de
                         copy_yes = True
                         print('ФАЙЛА НЕТ! скопирован файл {0} в файл {1}'.format(source_file, dest_file))
                     if copy_yes == True:
-                        shutil.copy2(source_file, dest_file)
+                        logger_cd.debug('будем копировать\nисточник = {0}\nназначение = {1}'.format(source_file, dest_file))
+                        try:
+                            try:
+                                if os.path.exists(dest_file):
+                                    os.remove(dest_file)
+                            except Exception as exc:
+                                logger_cd.debug('ошибка удаления не правильного файла назначения {0}'.format(exc))
+                            shutil.copy2(source_file, dest_file)
+                        except Exception as exc:
+                            logger_cd.debug('ошибка копирования {0}'.format(exc))
+
         files_bar.finish()
     shop_bar.finish()
 
